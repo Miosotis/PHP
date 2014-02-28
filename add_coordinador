@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+<?php
+
+include ("../connection/connection.php");
+
+if(isset($_POST['submit']))
+{
+	$nombre = $_POST['nombre'];
+	$nombre = htmlspecialchars($nombre,ENT_QUOTES);
+	$apellido =$_POST['apellido'];
+	$apellido = htmlspecialchars($apellido,ENT_QUOTES);
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	$confirm_pass = $_POST['confirm_pass'];
+	$email = $_POST['email'];
+	
+		$query_user = mysql_query('SELECT * FROM coordinador WHERE username = "'.mysql_real_escape_string($username).'"');
+			if($exist = @mysql_fetch_object($query_user))
+			{
+			echo 'El usuario '.$username.' ya existe..';	
+			}
+		else if($password === $confirm_pass) 
+		{
+			
+			//$query_login= mysql_query("INSERT INTO login VALUES ('$username','$password', 1)");
+			$query2 = mysql_query("INSERT INTO coordinador (nombre,apellido,username,password,email) VALUES ('$nombre','$apellido','$username','$password','$email')") or die (mysql_error());// date();
+			mysql_close($link);
+		    echo '</br>Se ha registrado exitosamente';
+			?>
+           
+			<table width="200" border="0">
+    <tr>
+      <td width="138">Nombre:</td>
+      <td width="52"><?php echo $nombre. " ".$apellido;?> </td>
+    </tr>S
+    <tr>
+      <td>Usuario:</td>
+      <td><?php echo $username; ?></td>
+    </tr>
+    <tr>
+      <td>Correo Electronico:</td>
+      <td><?php echo $email; ?></td>
+    </tr>
+    <tr>
+      
+  </table>
+            <?php
+			
+				
+			
+		}
+		else 
+			{
+			echo 'Por favor, introduzca dos contrasenas identicas';
+			}
+	}
+	
+	
+
+
+?>
+</body>
+</html>
