@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Listado Evento</title>
+</head>
+
+<body>
+<?php
+include ("../connection/connection.php");
+
+	$query = "SELECT * from evento";
+
+	
+	echo "<h1>Eventos</h1>";
+	
+	
+		            
+	if ($r = mysql_query($query, $link))
+	{
+	echo '<table align="center" width="800" border="0" cellpading="0" bgcolor="white">';	
+		while($row = mysql_fetch_array($r))
+		{
+
+			echo '<tr>
+    			<td><a href="solicitud_evento.php?id='.$row['id'].'"> '.$row['titulo'].  '</td>
+  			</tr>';
+		}
+		echo '</table>';
+	}
+	
+
+		
+           
+	
+     
+?>
+</body>
+</html>
