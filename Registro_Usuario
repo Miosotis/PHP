@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ <?php
+	include("../connection/connection.php");
+		//echo $_POST['titulo'];
+
+	?>
+   
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Registro</title>
+<script src="SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
+<link href="SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<form id="form1" name="form1" method="POST" action="registrar_usuario.php?">
+  <p><h1>Registro
+  
+  </h1>
+  <p>
+    <label for="nombre">Nombre:</label>
+    <span id="sprytextfield1">
+    <input name="nombre" type="text" id="nombre"  />
+  <span class="textfieldRequiredMsg">A value is required.</span><span class="textfieldInvalidFormatMsg">Invalid format.</span></span></p>
+  <p>
+    <label for="apelldio">Apellido</label>
+    :
+    <span id="sprytextfield2">
+    <input type="text" name="apellido" id="apellido" />
+  <span class="textfieldRequiredMsg">A value is required.</span></span></p>
+  <p>Nombre usuario:<span id="sprytextfield3">
+    <input type="text" name="username" id="username" />
+  <span class="textfieldRequiredMsg">A value is required.</span></span></p>
+  <p>Contrase&ntilde;a:<span id="sprytextfield4">
+    <input type="password" name="password" id="password" />
+    <span class="textfieldRequiredMsg">A value is required.</span></span></p>
+<p>
+    <label for="confirm_pass">Confirmar contrase&ntilde;a:</label>
+    <span id="sprytextfield5">
+    <input name="confirm_pass" type="password" id="confirm_pass" />
+    <span class="textfieldRequiredMsg">A value is required.</span></span>  </p>
+  <p>
+    <label for="email">Correo Electr&oacute;nico:</label>
+    <span id="sprytextfield7">
+    <input type="text" name="email" id="email" />
+    <span class="textfieldRequiredMsg">A value is required.</span><span class="textfieldInvalidFormatMsg">Invalid format.</span></span>  	</p>
+  
+    <label for="evento">Evento:</label>
+    <select name ="titulo" onChange="submit()">
+  <?php
+
+
+   $sql = "select * from evento";
+$rec = mysql_query($sql);
+while($row = mysql_fetch_array($rec))
+{
+
+echo "<option value = '".$row['id']."'>";
+if($_POST['titulo']==$row['id'])
+echo "SELECTED";
+echo">";
+echo $row['titulo'];
+echo"</option>";
+}
+    ?>
+</select>
+  </p>
+  <p>
+    <input type="submit" name="registrar" id="registrar" value="Registrate" />
+  </p>
+</form>
+
+<?php
+include ("../connection/connection.php");
+if(isset($_POST['registrar']))
+{	
+
+	$nombre = $_POST['nombre'];
+	$nombre = htmlspecialchars($nombre,ENT_QUOTES);
+	$apellido = $_POST['apellido'];
+	$apellido = htmlspecialchars($apellido,ENT_QUOTES);
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	$confirm_pass = $_POST['confirm_pass'];
+	$email = $_POST['email'];
+	
+		$query_user = mysql_query('SELECT * FROM usuario_data WHERE username = "'.mysql_real_escape_string($username).'"');
+			if($exist = @mysql_fetch_object($query_user))
+			{
+			echo 'El usuario '.$username.' ya existe..';	
+			}
+		else if($password === $confirm_pass) 
+		{
+			
+		//	$query_login= mysql_query("INSERT INTO login VALUES ('$username','$password', 1)");
+			$query_usuario = mysql_query("INSERT INTO usuario_data VALUES ('','$username','$password','$nombre','$apellido','$email')");
+			
+			$query2 = "SELECT evento.id,usuario_data.id_usuario FROM evento, usuario_data";
+			
+			
+			//anadido
+			$r = mysql_query($query2, $link);
+			$row = mysql_fetch_array($r);
+			
+			$query_registro = "INSERT INTO registro * VALUES ('','".$row['id_usuario']."','".$row['id']."')";
+			mysql_close($link);
+		    echo '</br>Se ha registrado exitosamente';
+		}
+		
+		else 
+			{
+			echo 'Por favor, introduzca dos contrasenas identicas';
+			}
+}
+
+	
+
+
+
+
+?>
+<script type="text/javascript">
+var sprytextfield1 = new Spry.Widget.ValidationTextField("sprytextfield1", "custom");
+var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2");
+var sprytextfield3 = new Spry.Widget.ValidationTextField("sprytextfield3");
+var sprytextfield4 = new Spry.Widget.ValidationTextField("sprytextfield4");
+var sprytextfield5 = new Spry.Widget.ValidationTextField("sprytextfield5");
+var sprytextfield7 = new Spry.Widget.ValidationTextField("sprytextfield7", "email");
+</script>
+</body>
+</html>
