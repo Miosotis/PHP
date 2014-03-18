@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ <?php
+	include("../connection/connection.php");
+	
+		$my_id = $_POST['my_id'];
+		echo $my_id;
+		
+		
+
+	?>
+   
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Registro</title>
+<script src="SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
+<link href="SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+#form1 table tr td h1 {
+	text-align: left;
+}
+</style>
+</head>
+
+<body>
+<form id="form1" name="form1" method="POST" action="registrar_usuario.php?">
+  <table width="326" border="0">
+    <tr>
+      <td colspan="2"><h1>Registro</h1> </td>
+    </tr>
+    <tr>
+      <td width="129"><label for="nombre">Nombre:</label></td>
+      <td width="144"><span id="sprytextfield1">
+      <input name="nombre" type="text" id="nombre"  />
+      <span class="textfieldRequiredMsg">A value is required.</span><span class="textfieldInvalidFormatMsg">Invalid format.</span></span></td>
+    </tr>
+    <tr>
+      <td><label for="apelldio4">Apellido</label>
+: </td>
+      <td><span id="sprytextfield2">
+      <input type="text" name="apellido" id="apellido" />
+      <span class="textfieldRequiredMsg">A value is required.</span></span></td>
+    </tr>
+    <tr>
+      <td>Nombre usuario:</td>
+      <td><span id="sprytextfield3">
+      <input type="text" name="username" id="username" />
+      <span class="textfieldRequiredMsg">A value is required.</span></span></td>
+    </tr>
+    <tr>
+      <td>Contrase&ntilde;a:</td>
+      <td><span id="sprytextfield4">
+      <input type="password" name="password" id="password" />
+      <span class="textfieldRequiredMsg">A value is required.</span></span></td>
+    </tr>
+    <tr>
+      <td>Confirmar contrase&ntilde;a:</td>
+      <td><span id="sprytextfield5">
+      <input name="confirm_pass" type="password" id="confirm_pass" />
+      <span class="textfieldRequiredMsg">A value is required.</span></span></td>
+    </tr>
+    <tr>
+      <td>Correo Electr&oacute;nico:</td>
+      <td><span id="sprytextfield7">
+      <input type="text" name="email" id="email" />
+      <span class="textfieldRequiredMsg">A value is required.</span><span class="textfieldInvalidFormatMsg">Invalid format.</span></span></td>
+    </tr>
+    <tr>
+      <td>Evento:</td>
+      <td><p>
+        <select name ="titulo" >
+          <?php
+   $sql = "select * from evento";
+$rec = mysql_query($sql);
+while($row = mysql_fetch_array($rec))
+{
+
+echo "<option value = '".$row['id']."'>";
+//if($_POST['titulo']==$row['id'])
+//echo "SELECTED";
+//echo">";
+echo $row['titulo'];
+echo"</option>";
+}
+    ?>
+        </select>
+      </p>
+      <p>
+        <input name="hola" type="text" id="hola" value="<?php echo "campo ".$my_id; ?>" />
+      </p></td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" name="registrar" id="registrar" value="Registrate" /></td>
+    </tr>
+  </table>
+  <p>&nbsp;</p>
+  <p>
+    <label for="email">:</label>
+  </p>
+  </p>
+  <p>&nbsp;</p>
+</form>
+
+<?php
+include ("../connection/connection.php");
+if(isset($_POST['registrar']))
+{	
+
+	$nombre = $_POST['nombre'];
+	$nombre = htmlspecialchars($nombre,ENT_QUOTES);
+	$apellido = $_POST['apellido'];
+	$apellido = htmlspecialchars($apellido,ENT_QUOTES);
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	$confirm_pass = $_POST['confirm_pass'];
+	$email = $_POST['email'];
+	
+	
+		$query_user = mysql_query('SELECT * FROM usuario_data WHERE username = "'.mysql_real_escape_string($username).'"');
+			if($exist = @mysql_fetch_object($query_user))
+			{
+			echo 'El usuario '.$username.' ya existe..';	
+			}
+		else if($password === $confirm_pass) 
+		{
+			
+		//	$query_login= mysql_query("INSERT INTO login VALUES ('$username','$password', 1)");
+			$query_usuario = mysql_query("INSERT INTO usuario_data VALUES ('','$username','$password','$nombre','$apellido','$email')");
+		
+			
+		    echo '</br>Se ha registrado exitosamente';
+
+	
+			
+		}
+		
+		else 
+			{
+			echo 'Por favor, introduzca dos contrasenas identicas';
+			}
+}
+
+
+$id_query = 'SELECT * FROM usuario_data WHERE username = "'.mysql_real_escape_string($username).'"';
+	$result = mysql_query($id_query,$link);
+	
+		while($registro=mysql_fetch_array($result))
+		{
+ $registro1 = $registro['id_usuario'];
+ echo $registro1;
+ $query_registro = mysql_query("INSERT INTO registro  VALUES ('',$registro1,$my_id)");
+ 
+}
+
+			
+
+
+
+?>
+<script type="text/javascript">
+var sprytextfield1 = new Spry.Widget.ValidationTextField("sprytextfield1", "custom");
+var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2");
+var sprytextfield3 = new Spry.Widget.ValidationTextField("sprytextfield3");
+var sprytextfield4 = new Spry.Widget.ValidationTextField("sprytextfield4");
+var sprytextfield5 = new Spry.Widget.ValidationTextField("sprytextfield5");
+var sprytextfield7 = new Spry.Widget.ValidationTextField("sprytextfield7", "email");
+</script>
+</body>
+</html>
